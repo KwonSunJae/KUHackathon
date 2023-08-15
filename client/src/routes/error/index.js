@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import Main  from  '../../components/main';
+import NotFound  from  '../../components/error';
 
 
 export default function Home() {
@@ -9,7 +9,7 @@ export default function Home() {
     
     <div>
       
-      <Main/>
+      <NotFound/>
       
     </div>
     
