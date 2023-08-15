@@ -112,7 +112,7 @@ const Main = () => {
                 {tablesData[selectedSector].map((table, index) => (
                     <div key={index} className="table-item"  onClick={() => handleTableClick(table)}>
                         
-                        <img src='https://github.com/KwonSunJae/CLOUD_AI_WEB_BATMAN_BATNAM_2021/blob/master/logo.png' ></img>
+                        <img src='http://localhost:3000/image?url=https://github.com/KwonSunJae/CLOUD_AI_WEB_BATMAN_BATNAM_2021/raw/master/logo.png' ></img>
                         <h1>{table}</h1>
 
                     </div>
@@ -153,7 +153,7 @@ const Main = () => {
                 <div>
                     <h3>{selectedTable} 감상하기</h3>
                     {/* 테이블 조회 API를 통해 데이터를 가져와서 보여줌 */}
-                    <View url= 'https://github.com/KwonSunJae/KUHackathon/blob/develop/README.md'/>
+                    <View url= 'http://localhost:3000/image?url=https://raw.githubusercontent.com/TeamDivers/Soar/main/README.md'/>
                 </div>
             </Modal>
         </div>
