@@ -2,7 +2,7 @@ import axios from 'axios';
 
 
 const namespace =
-    'http://localhost:5000/api';
+    'http://117.16.137.217:3000/apis';
 
 export const getMain = async () => {
     const url = `${namespace}/main`;
@@ -15,7 +15,7 @@ export const getMain = async () => {
 
     return await axios(config)
         .then(response => {
-            return response.data.data;
+            return response.data;
         })
         .catch(error => {
             console.log(error);
@@ -34,7 +34,7 @@ export const getTeam = async (uuid) => {
 
     return await axios(config)
         .then(response => {
-            return response.data.data;
+            return response.data;
         })
         .catch(error => {
             console.log(error);
@@ -53,7 +53,7 @@ export const isLikeAvailable = async (uuid) => {
 
     return await axios(config)
         .then(response => {
-            return response.data.data;
+            return response.data;
         })
         .catch(error => {
             console.log(error);
