@@ -1,0 +1,10 @@
+var express = require("express");
+var router = express.Router();
+var teamController = require("../controllers/team_crtl");
+var reapleController = require("../controllers/reaple_crtl");
+router.get("/team/:uuid", teamController.getTeam);
+router.post("/like", teamController.likeTeam);
+router.post("/write", reapleController.writeReaple);
+router.post("/dislike", teamController.dislikeTeam);
+router.get("/like/:uuid", teamController.isLikeAvailable);
+router.post("/auth", teamController.getAuth);
