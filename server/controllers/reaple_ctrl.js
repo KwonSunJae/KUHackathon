@@ -3,7 +3,7 @@ const db = require("../models");
 const reaple = require("../models/reaple");
 const logger = require("../modules/winton");
 
-const reaple = {
+const reaples = {
 
 };
 
@@ -37,6 +37,6 @@ const process = {
 
 
 module.exports = {
-    reaple,
+    reaples,
     process,
 };

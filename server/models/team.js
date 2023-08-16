@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
         "team",
         {
             uuid: {
-                type: DataTypes.TEXT,
+                type: DataTypes.STRING ,
                 allowNull: false,
                 primaryKey: true,
             },

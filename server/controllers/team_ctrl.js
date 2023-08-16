@@ -1,9 +1,10 @@
 const { where } = require("sequelize");
 const db = require("../models");
 const reaple = require("../models/reaple");
+const team = require("../models/team")
 const logger = require("../modules/winton");
 
-const team = {
+const teams = {
     getTeam: async (req, res, next) => {
         let teamUuid = req.params.team_uuid;
         if (!teamUuid) {
@@ -128,6 +129,6 @@ const process = {
 
 
 module.exports = {
-    team,
+    teams,
     process,
 };
