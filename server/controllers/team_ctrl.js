@@ -37,22 +37,22 @@ const teams = {
         })
             .then((data) => {
                 db.reaple.findAll({
-                    attributes : ["name", "contents"]
-                }).then((datas)=>{
+                    attributes: ["name", "contents"]
+                }).then((datas) => {
                     res.send({
-                        name : data.name,
-                        profileImg : data.profileImg,
-                        readmeURL : data.readmeURL,
-                        title : data.title,
+                        name: data.name,
+                        profileImg: data.profileImg,
+                        readmeURL: data.readmeURL,
+                        title: data.title,
                         description: data.description,
-                        likeNameList : data.heart,
-                        reapleList : datas
+                        likeNameList: data.heart,
+                        reapleList: datas
                     });
                 })
-                .catch((e)=>{
-                    next(e);
-                })
-                
+                    .catch((e) => {
+                        next(e);
+                    })
+
             })
             .catch((err) => {
                 next(err);
@@ -67,24 +67,19 @@ const teams = {
             return;
         }
 
-        const like_team_list = await team.findOne({ //heart한 팀들 가져오기
-            attributes: ["heart"],
-            where: {
-                uuid: teamUuid,
-            },
-        });
-
-        const is_team_name = 0;
-        if (like_team_list.includes(like_team_name)) {  //좋아요한 팀 존재 체크
-            console.log("Team name already exists in heart");
-            is_team_name = 1;
-        }
-
-        if (like_team_list.length >= 10 || is_team_name) {
-            return res.status(400).json({ isAvailable: false });
-        } else {
-            return res.status(200).json({ isAvailable: true });
-        }
+        db.team.findOne({
+            attributes : ["heart"],
+            where : {
+            uuid : teamUuid
+        }}).then((data)=>{
+            const team_list = JSON.parse(data.heart);
+            if(team_list.length >=10){
+                res.send({isAvailable : false});
+            }
+            else{
+                res.send({isAvailable:true});
+            }
+        })
 
     }
 };
@@ -105,37 +100,43 @@ const process = {
                 uuid: teamUuid,
             },
         })
-        .then((data)=>{
-            
-            
-        })
-        
-        const currentHeart = like_team_list.heart ? JSON.parse(like_team_list.heart) : [];
-        like_team_list = [];
-        currentHeart.forEach(teamName => {
-            like_team_list.push(teamName);
-        });
+            .then((data) => {
+                console.log(data);
+                const team_list = JSON.parse(data.heart);
+                team_list.forEach(team => {
+                    like_team_list.push(team);
+                });
+                console.log(team_list);
+                var is_team_name = false;
+                if (like_team_list.includes(like_team_name)) {  //좋아요한 팀 존재 체크
+                    console.log("Team name already exists in heart");
+                    res.status(400).send({ error: "error" });
+                    is_team_name = true;
+                    return;
+                }
+
+                if (like_team_list.length >= 10 || is_team_name) {
+                    res.status(400).send({ error: "error" });
+                    return;
+                } else {
+                    like_team_list.push(req.body.likeTeamName);
+
+                    db.team
+                        .update({
+                            heart: JSON.stringify(like_team_list),
+                        },
+                            {
+                                where: { uuid: teamUuid, },
+                            }).then((data) => {
+                                console.log(data);
+                                res.send(data);
+
+                            })
+                        .catch((error) => { console.log(error) });
+                }
+            })
 
 
-        const is_team_name = 0;
-        if (like_team_list.includes(like_team_name)) {  //좋아요한 팀 존재 체크
-            console.log("Team name already exists in heart");
-            is_team_name = 1;
-        }
-
-
-        if (like_team_list.length >= 10 || is_team_name) {
-            return res.status(400).json({ error: "좋아요 불가" });
-        } else {
-            like_team_list.push(like_team_name);
-            db.team
-                .update({
-                    heart: JSON.stringify(like_team_list),
-                },
-                    {
-                        where: { uuid: teamUuid, },
-                    }).catch((error) => { console.log(error) });
-        }
 
     },
 
@@ -145,29 +146,41 @@ const process = {
 
         const teamUuid = req.body.uuid;
         const dislike_team_name = req.body.dislikeTeamName;
-
-        const like_team_list = await team.findOne({ //heart한 팀들 가져오기
+        const like_team_list = [];
+        db.team.findOne({
             attributes: ["heart"],
             where: {
-                uuid: teamUuid,
-            },
-        });
-
-        const filtered_team_list = like_team_list.filter(teamName => teamName !== dislike_team_name);
-
-        if (like_team_list.length === filtered_team_list.length) { //제외된 팀이 없으면 dislike 불가
-            console.log("Team not found in heart");
-            return res.status(404).json({ message: "Team not found in heart" });
-        } else {
-            db.team
-                .update({
-                    heart: JSON.stringify(filtered_team_list),
-                },
-                    {
-                        where: { uuid: team_uuid, },
+                uuid: teamUuid
+            }
+        })
+            .then((data) => {
+                const team_list = JSON.parse(data.heart);
+                team_list.forEach(team => {
+                    like_team_list.push(team);
+                });
+                console.log(team_list);
+                console.log(req.body.dislikeTeamName);
+                var is_team_name = false;
+                if (team_list.includes(req.body.dislikeTeamName)) {  //좋아요한 팀 존재 체크
+                    const filtered_team_list = team_list.filter(teamName => teamName !== req.body.dislikeTeamName);
+                    
+                    db.team.update({
+                        heart : JSON.stringify(filtered_team_list)
+                    },{
+                        where : {
+                            uuid : teamUuid
+                        }
+                    }).then((data)=>{
+                        res.send(data);
+                    }).catch((e)=>{
+                        next(e);
                     })
-                .catch((error) => { console.log(error) });
-        }
+                }
+                else{
+                    res.status(400).send({message : "isAleady removed"});
+                }
+
+            })
 
     },
 
@@ -179,18 +192,18 @@ const process = {
         const pw = req.body.pw;
 
         db.team.findOne({
-            where : {
-                name : name
+            where: {
+                name: name
             }
-        }).then((data)=>{
-            if(data.pw === pw){
+        }).then((data) => {
+            if (data.pw === pw) {
                 res.send({
-                    uuid : data.uuid
+                    uuid: data.uuid
                 });
             }
-            else{
+            else {
                 res.send({
-                    uuid : "error"
+                    uuid: "error"
                 });
             }
         })
@@ -207,23 +220,25 @@ const process = {
         const description = req.body.description;
         db.team.update(
             {
-                profileImg : profileImg,
-                readmeURL : readmeURL,
-                title : title,
-                description : description,
+                profileImg: profileImg,
+                readmeURL: readmeURL,
+                title: title,
+                description: description,
 
             },
-            {where : {
-                uuid : uuid
-            }}
+            {
+                where: {
+                    uuid: uuid
+                }
+            }
 
         )
-        .then((data)=>{
-            res.send(data);
-        })
-        .catch((e)=>{
-            next(e);
-        })
+            .then((data) => {
+                res.send(data);
+            })
+            .catch((e) => {
+                next(e);
+            })
     },
     addTeam: async (req, res, next) => {
         let user_info = req.body;
