@@ -1,49 +1,58 @@
 const { where } = require("sequelize");
 const db = require("../models");
 const reaple = require("../models/reaple");
-const team = require("../models/team")
+const team = require("../models/team");
 const logger = require("../modules/winton");
 
 
 const teams = {
 
+
+    getMain: async (req, res, next) => {
+
+        const allTeams = await db.team.findAll({
+            attributes: ["name", "title", "profileImg", "uuid"],
+        });
+
+        // teams 배열 생성
+        const teams = allTeams.map(team => ({
+            name: team.name,
+            title: team.title,
+            profileImg: team.profileImg,
+            uuid: team.uuid,
+        }));
+        return res.status(200).json({ teams: teams });
+    },
+
     getTeam: async (req, res, next) => {
-        let teamUuid = req.params.team_uuid;
+        let teamUuid = req.params.uuid;
         if (!teamUuid) {
             res.json({ results: false, message: "No request params" });
             return;
         }
 
-        const likeNameList = db.team.findOne({ //heart 누른팀들 저장
-            attributes: ["heart"],
-            where: { uuid: teamUuid },
+
+        db.team.findOne({ //likeUuidList , reapleList
+            attributes: ["name", "profileImg", "readmeURL", "title", "description", "heart"],
         })
-
-        const likeNames = likeNameList.split(","); //heart 누른 팀들 리스트
-        //heart 누른팀의 uuid들 저장
-        const likeUuidList = await likeNames.map(async (name) => {
-            const teamInfo = await team.findOne({
-                attributes: ["uuid"],
-                where: {
-                    name: name,
-                },
-            });
-        });
-
-
-        db.team
-            .findOne({ //likeUuidList , reapleList
-                attributes: ["name", "profileImg", "readmeURL", "title", "description"],
-                include: [
-                    {
-                        model: reaple,
-                        attributes: ["name", "contents"],
-                    },
-                ],
-                where: { uuid: teamUuid },
-            })
             .then((data) => {
-                res.send({ data, likeUuidList });
+                db.reaple.findAll({
+                    attributes : ["name", "contents"]
+                }).then((datas)=>{
+                    res.send({
+                        name : data.name,
+                        profileImg : data.profileImg,
+                        readmeURL : data.readmeURL,
+                        title : data.title,
+                        description: data.description,
+                        likeNameList : data.heart,
+                        reapleList : datas
+                    });
+                })
+                .catch((e)=>{
+                    next(e);
+                })
+                
             })
             .catch((err) => {
                 next(err);
@@ -61,7 +70,7 @@ const teams = {
         const like_team_list = await team.findOne({ //heart한 팀들 가져오기
             attributes: ["heart"],
             where: {
-                uuid: team_uuid,
+                uuid: teamUuid,
             },
         });
 
@@ -77,7 +86,7 @@ const teams = {
             return res.status(200).json({ isAvailable: true });
         }
 
-    };
+    }
 };
 
 
@@ -86,15 +95,27 @@ const process = {
         let likeTeam_info = req.body;
         logger.info(JSON.stringify(req.body));
 
-        const team_uuid = req.body.uuid;
+        const teamUuid = req.body.uuid;
         const like_team_name = req.body.likeTeamName;
 
-        const like_team_list = await team.findOne({ //heart한 팀들 가져오기
+        let like_team_list = [];
+        db.team.findOne({ //heart한 팀들 가져오기
             attributes: ["heart"],
             where: {
-                uuid: team_uuid,
+                uuid: teamUuid,
             },
+        })
+        .then((data)=>{
+            
+            
+        })
+        
+        const currentHeart = like_team_list.heart ? JSON.parse(like_team_list.heart) : [];
+        like_team_list = [];
+        currentHeart.forEach(teamName => {
+            like_team_list.push(teamName);
         });
+
 
         const is_team_name = 0;
         if (like_team_list.includes(like_team_name)) {  //좋아요한 팀 존재 체크
@@ -112,7 +133,7 @@ const process = {
                     heart: JSON.stringify(like_team_list),
                 },
                     {
-                        where: { uuid: team_uuid, },
+                        where: { uuid: teamUuid, },
                     }).catch((error) => { console.log(error) });
         }
 
@@ -122,13 +143,13 @@ const process = {
         let likeTeam_info = req.body;
         logger.info(JSON.stringify(req.body));
 
-        const team_uuid = req.body.uuid;
+        const teamUuid = req.body.uuid;
         const dislike_team_name = req.body.dislikeTeamName;
 
         const like_team_list = await team.findOne({ //heart한 팀들 가져오기
             attributes: ["heart"],
             where: {
-                uuid: team_uuid,
+                uuid: teamUuid,
             },
         });
 
@@ -157,21 +178,22 @@ const process = {
         const name = req.body.name;
         const pw = req.body.pw;
 
-        const is_team = await team.findOne({ //heart한 팀들 가져오기
-            attributes: ["uuid"],
-            where: {
-                name: name,
-                pw: pw,
-            },
-        });
-
-        if (is_team) { //제외된 팀이 없으면 dislike 불가
-            console.log("login");
-            return res.status(200).json({ uuid: is_team });
-        } else {
-            console.log("fail");
-            return res.status(404).json({ uuid: "error" });
-        }
+        db.team.findOne({
+            where : {
+                name : name
+            }
+        }).then((data)=>{
+            if(data.pw === pw){
+                res.send({
+                    uuid : data.uuid
+                });
+            }
+            else{
+                res.send({
+                    uuid : "error"
+                });
+            }
+        })
     },
 
     updateTeam: async (req, res, next) => {
@@ -183,29 +205,52 @@ const process = {
         const readmeURL = req.body.readmeURL;
         const title = req.body.title;
         const description = req.body.description;
+        db.team.update(
+            {
+                profileImg : profileImg,
+                readmeURL : readmeURL,
+                title : title,
+                description : description,
 
-        const foundTeam = await team.findOne({ //heart한 팀들 가져오기
-            where: {
-                uuid: uuid,
             },
-        });
+            {where : {
+                uuid : uuid
+            }}
 
-        if (foundTeam) {
-            // 팀 정보 업데이트
-            await foundTeam.update({
-                profileImg: profileImg,
-                readmeURL: readmeURL,
-                title: title,
-                description: description,
+        )
+        .then((data)=>{
+            res.send(data);
+        })
+        .catch((e)=>{
+            next(e);
+        })
+    },
+    addTeam: async (req, res, next) => {
+        let user_info = req.body;
+        logger.info(JSON.stringify(req.body));
+
+        let flag = false;
+        if (user_info == null) {
+            res.json({ results: false, message: "No request body" });
+            return;
+        }
+        db.team
+            .create({
+                name: user_info.name,
+                pw: user_info.pw,
+
+            })
+            .then((results) => {
+
+                console.log(results);
+                res.status(200).json({ result: results });
+            })
+            .catch((err) => {
+                next(err);
+                res.status(503).json("error");
             });
 
-            console.log("Team information updated successfully");
-            return res.status(200).json({ message: "Team information updated successfully" });
-        } else {
-            console.log("Team not found");
-            return res.status(404).json({ error: "Team not found" });
-        }
-    };
+    }
 
 
 }
