@@ -24,8 +24,9 @@ const process = {
                     name: name,
                     teamUuid: teamUuid,
                     contents, contents,
-                },).then((res) => {
-                    console.log(res);
+                },).then((data) => {
+                    console.log(data);
+                    res.send(data);
                 })
                 .catch((err) => {
                     console.log(err);

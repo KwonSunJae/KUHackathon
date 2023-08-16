@@ -1,11 +1,14 @@
+const { v4: uuidv4 } = require('uuid'); // uuid 모듈에서 v4 함수를 가져옴
+
 module.exports = (sequelize, DataTypes) => {
     const team = sequelize.define(
         "team",
         {
             uuid: {
-                type: DataTypes.STRING ,
+                type: DataTypes.STRING,
                 allowNull: false,
                 primaryKey: true,
+                defaultValue: () => uuidv4(), // uuidv4 함수를 사용하여 자동 생성
             },
             name: {
                 type: DataTypes.TEXT,
@@ -16,25 +19,25 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
             },
             profileImg: {
-                type: DataTypes.BOOLEAN,
-                allowNull: false,
-                defaultValue: false,
+                type: DataTypes.TEXT,
+                allowNull: true,
+                
             },
             readmeURL: {
                 type: DataTypes.TEXT,
-                allowNull: false,
+                allowNull: true,
             },
             title: {
                 type: DataTypes.TEXT,
-                allowNull: false,
+                allowNull: true,
             },
             description: {
                 type: DataTypes.TEXT,
-                allowNull: false,
+                allowNull: true,
             },
             heart: {
                 type: DataTypes.TEXT,
-                allowNull: false,
+                allowNull: true,
             },
         },
         {

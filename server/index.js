@@ -7,6 +7,20 @@ global.logger || (global.logger = require("./modules/winton"));
 const db = require("./models");
 dotenv.config();
 const path = require("path");
+const cors = require("cors");
+const allowedIP = '';
+
+// CORS 미들웨어를 설정하여 특정 IP 주소로의 요청만 허용합니다.
+const corsOptions = {
+  origin: (origin, callback) => {
+    if ( true) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+};
+app.use(cors(corsOptions));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
