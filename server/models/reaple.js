@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
         }
     );
     reaple.associate = (models) => {
-        reaple.belongsTo(models.user, {
+        reaple.belongsTo(models.team, {
             foreignKey: "team_uuid",
         })
     }

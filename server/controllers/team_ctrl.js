@@ -1,24 +1,11 @@
 const { where } = require("sequelize");
 const db = require("../models");
 const reaple = require("../models/reaple");
+const team = require("../models/team")
 const logger = require("../modules/winton");
 
-const team = {
-    getMain: async (req, res, next) => {
 
-        const allTeams = await team.findAll({
-            attributes: ["name", "title", "profileImg", "uuid"],
-        });
-
-        // teams 배열 생성
-        const teams = allTeams.map(team => ({
-            name: team.name,
-            title: team.title,
-            profileImg: team.profileImg,
-            uuid: team.uuid,
-        }));
-        return res.status(200).json({ teams: teams });
-    },
+const teams = {
 
     getTeam: async (req, res, next) => {
         let teamUuid = req.params.team_uuid;
@@ -225,6 +212,6 @@ const process = {
 
 
 module.exports = {
-    team,
+    teams,
     process,
 };
