@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './index.css';
 import Profile from '../profileModal';
 import View from '../viewModal/inedx';
-
+import { getMain,getTeam,getAuth,updateTeam } from '../../apis/team';
 // 모달 컴포넌트
 const Modal = ({ isOpen, onClose, children }) => {
     if (!isOpen) return null;
@@ -42,6 +42,16 @@ const Main = () => {
     const [isViewModalOpen, setIsViewModalOpen] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [isSelectModalOpen , setIsSelectModalOpen] = useState(false);
+    const [tableList ,setTableList] = useState([]);
+    const [authName,setAuthName] = useState('');
+
+    useEffect(()=>{
+        const check = localStorage.getItem('name');
+        if(check==null){
+            console.log('firstLogin!');
+            openWriteModal()
+        }
+    },[]);
 
     const handleSectorChange = (sector) => {
         setSelectedSector(sector);
@@ -49,7 +59,19 @@ const Main = () => {
 
     const handleTableClick = (table) => {
         setSelectedTable(table);
-        openSelectModal();
+        const savedInfo = localStorage.getItem('name');
+        if(savedInfo === table){
+            console.log(savedInfo)
+            console.log(table);
+            setIsAuthenticated(true);
+            openWriteModal();
+            
+        }
+        else{
+            
+            openViewModal();
+        }
+        
     };
     const openSelectModal = ()=>{
         setIsSelectModalOpen(true);
@@ -77,18 +99,26 @@ const Main = () => {
     const [authPassword, setAuthPassword] = useState(''); // 입력한 비밀번호를 상태로 관리
     const [authError, setAuthError] = useState(false); // 인증 실패 여부
 
-    const handleAuthSubmit = () => {
+    const handleAuthSubmit = async () => {
         // 여기서 실제 인증 로직을 수행하고, 인증에 성공하면 setIsAuthenticated(true)로 설정합니다.
         // 실제 코드에서는 서버와의 통신이 필요하며, 보안을 고려해야 합니다.
+        const userInfo = {
+            name : authName,
+            pw : authPassword
+        }
+        const data =await getAuth(userInfo);
 
         // 가상의 비밀번호 'mysecretpassword'로 인증 시도
-        if (authPassword === 'mysecretpassword') {
+        if (data.uuid === 'error') {
+            setAuthError(true);
+        } else {
+            
             setIsAuthenticated(true);
             closeWriteModal(); // 작성하기 모달 닫기
-            openWriteModal(); 
+            localStorage.setItem('name',authName);
+            localStorage.setItem('pw',authPassword );
+            localStorage.setItem('uuid', data.uuid);
             setAuthError(false);
-        } else {
-            setAuthError(true);
         }
     };
 
@@ -119,13 +149,13 @@ const Main = () => {
                 ))}
             </div>
             {/*  작성 또는 감상 선택 모달 */}
-            <Modal isOpen={isSelectModalOpen} onClose={closeSelectModal}>
+            {/* <Modal isOpen={isSelectModalOpen} onClose={closeSelectModal}>
                 <div>
                     <h3>{selectedTable}</h3>
                     <button onClick={openWriteModal}>작성하기</button>
                     <button onClick={openViewModal}>감상하기</button>
                 </div>
-            </Modal>
+            </Modal> */}
 
             {/* 작성하기 모달 */}
             <Modal isOpen={isWriteModalOpen} onClose={closeWriteModal}>
@@ -135,9 +165,15 @@ const Main = () => {
                     </div>
                 ) : (
                     <div>
-                        <h3>인증 필요</h3>
+                        <h3> 팀 인증 필요!</h3>
                         <input
-                            type="password"
+                            type="name"
+                            placeholder="팀명"
+                            value={authName}
+                            onChange={(e) => setAuthName(e.target.value)}
+                        />
+                        <input
+                            type="pw"
                             placeholder="비밀번호"
                             value={authPassword}
                             onChange={(e) => setAuthPassword(e.target.value)}
@@ -153,7 +189,7 @@ const Main = () => {
                 <div>
                     <h3>{selectedTable} 감상하기</h3>
                     {/* 테이블 조회 API를 통해 데이터를 가져와서 보여줌 */}
-                    <View url= 'http://localhost:3000/image?url=https://raw.githubusercontent.com/TeamDivers/Soar/main/README.md'/>
+                    <View url= 'http://localhost:3000/image?url=https://raw.githubusercontent.com/KwonSunJae/CLOUD_AI_WEB_BATMAN_BATNAM_2021/master/readme.md'/>
                 </div>
             </Modal>
         </div>
