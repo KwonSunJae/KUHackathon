@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { getTeam,updateTeam } from '../../apis/team';
 import './index.css';
 
 const Profile = () => {
@@ -7,15 +8,20 @@ const Profile = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
+  useEffect(()=>{
+    const userUuid = localStorage.getItem('uuid');
+    const data = getTeam(userUuid);
+    setProfileImg(data.profileImg);
+    setReadmeURL(data.readmeURL);
+    setTitle(data.title);
+    setDescription(data.description);
+  },[]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     // 여기서 데이터를 서버로 보내는 작업을 수행할 수 있습니다.
-    console.log('Submitted Data:', {
-      profileImg,
-      readmeURL,
-      title,
-      description,
-    });
+    const data = updateTeam({profileImg: profileImg, readmeURL : readmeURL, title : title, description: description});
+    console.log('Submitted Data:', data);
   };
 
   return (
