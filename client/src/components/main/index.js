@@ -28,77 +28,10 @@ const Main = () => {
     const [tablesData,setTablesData] = useState({
         A: [
             {
-                name : "야 너두 요리할 수 있어",
-                title : null,
-                profileImg: null,
-                uuid: "196cd0f3-5679-4e17-86f8-e2774bb02d71"
-            },
-            {
-                name: "한국인은_밥심",
-                title: null,
-                profileImg: null,
-                uuid: "258a1f35-8321-4a76-a0eb-9fdb669f13d5"
-            },
-            
-            {
-                name: "급발진",
-                title: null,
-                profileImg: null,
-                uuid: "31ab3d8e-b1ef-4f5d-8750-86f2d3ac7a23"
-            },
-            {
-                name: "MAZU(마주)",
-                title: null,
-                profileImg: null,
-                uuid: "45f14cd3-d929-4a65-8763-7dc52215562e"
-            },
-            {
-                name: "다섯이서왔스융",
-                title: null,
-                profileImg: null,
-                uuid: "4d04f173-f95a-40fb-9788-ae9383a784e2"
-            }],B:[
-            {
-                name: "해커톤 전사들",
-                title: null,
-                profileImg: null,
-                uuid: "4ffb278d-330f-481b-a0ef-701aa10298fe"
-            },
-            {
-                name: "칸쵸즈",
-                title: null,
-                profileImg: null,
-                uuid: "6dd1e3f6-3555-4792-ac20-702654eba9de"
-            },
-            {
-                name: "모카콩",
-                title: null,
-                profileImg: null,
-                uuid: "7298e7c7-a339-49e7-a9f0-29ecfcfb64c1"
-            },
-            {
                 name: "오감자",
                 title: null,
                 profileImg: null,
                 uuid: "891cbd44-4988-4f1e-8c76-8a91374118fb"
-            },
-            {
-                name: "이름을 입력해주세요",
-                title: null,
-                profileImg: null,
-                uuid: "9dfa2ba3-adc0-425a-8ddb-541ea0779545"
-            }],C:[
-            {
-                name: "심포니",
-                title: null,
-                profileImg: null,
-                uuid: "abe23bf2-3075-496c-8503-06a3640fd78a"
-            },
-            {
-                name: "MZC",
-                title: null,
-                profileImg: null,
-                uuid: "c1a59418-eda4-4d23-8aa4-63aa235e8b6f"
             },
             {
                 name: "Divers",
@@ -107,28 +40,10 @@ const Main = () => {
                 uuid: "c6518eaf-94e6-45c2-87fa-ab49cb4d38d7"
             },
             {
-                name: "양봉",
+                name: "이름을 입력해주세요",
                 title: null,
                 profileImg: null,
-                uuid: "c86b4263-6e15-4d1c-9a61-d5dd7a364b85"
-            },
-            {
-                name: "관호, 서진, 성현 Let's go",
-                title: null,
-                profileImg: null,
-                uuid: "e597eb1f-98dc-4673-a906-50cdf944d777"
-            }],D:[
-            {
-                name: "플레이스엑스(PLACE X)",
-                title: null,
-                profileImg: null,
-                uuid: "eee697f3-457d-4846-905d-4a6fb2a84e27"
-            },
-            {
-                name: "해커톤 한입",
-                title: null,
-                profileImg: null,
-                uuid: "eee9a809-2ac7-40de-96c4-ef61f6855f4c"
+                uuid: "9dfa2ba3-adc0-425a-8ddb-541ea0779545"
             },
             {
                 name: "리멤버",
@@ -137,11 +52,98 @@ const Main = () => {
                 uuid: "f6082e12-9661-4105-af06-f94887b499b5"
             },
             {
-                name: "풀악셀",
+                name: "급발진",
                 title: null,
                 profileImg: null,
-                uuid: "fec0f9e1-1bce-4b89-992c-a2cab33fbe52"
-            }
+                uuid: "31ab3d8e-b1ef-4f5d-8750-86f2d3ac7a23"
+            },    
+            ],B:[
+                {
+                    name: "풀악셀",
+                    title: null,
+                    profileImg: null,
+                    uuid: "fec0f9e1-1bce-4b89-992c-a2cab33fbe52"
+                },
+                {
+                    name: "한국인은_밥심",
+                    title: null,
+                    profileImg: null,
+                    uuid: "258a1f35-8321-4a76-a0eb-9fdb669f13d5"
+                },
+                {
+                    name: "칸쵸즈",
+                    title: null,
+                    profileImg: null,
+                    uuid: "6dd1e3f6-3555-4792-ac20-702654eba9de"
+                }, 
+                {
+                    name: "다섯이서왔스융",
+                    title: null,
+                    profileImg: null,
+                    uuid: "4d04f173-f95a-40fb-9788-ae9383a784e2"
+                },
+               {
+                    name: "MAZU(마주)",
+                    title: null,
+                    profileImg: null,
+                    uuid: "45f14cd3-d929-4a65-8763-7dc52215562e"
+                },            
+            ],C:[
+                {
+                    name: "모카콩",
+                    title: null,
+                    profileImg: null,
+                    uuid: "7298e7c7-a339-49e7-a9f0-29ecfcfb64c1"
+                },
+                {
+                    name: "양봉",
+                    title: null,
+                    profileImg: null,
+                    uuid: "c86b4263-6e15-4d1c-9a61-d5dd7a364b85"
+                },
+                {
+                    name: "MZC",
+                    title: null,
+                    profileImg: null,
+                    uuid: "c1a59418-eda4-4d23-8aa4-63aa235e8b6f"
+                },
+                {
+                    name: "해커톤 전사들",
+                    title: null,
+                    profileImg: null,
+                    uuid: "4ffb278d-330f-481b-a0ef-701aa10298fe"
+                },
+                {
+                    name : "야 너두 요리할 수 있어",
+                    title : null,
+                    profileImg: null,
+                    uuid: "196cd0f3-5679-4e17-86f8-e2774bb02d71"
+                }, 
+            ],D:[
+                {
+                    name: "해커톤 한입",
+                    title: null,
+                    profileImg: null,
+                    uuid: "eee9a809-2ac7-40de-96c4-ef61f6855f4c"
+                },
+                {
+                    name: "심포니",
+                    title: null,
+                    profileImg: null,
+                    uuid: "abe23bf2-3075-496c-8503-06a3640fd78a"
+                },
+                {
+                    name: "관호, 서진, 성현 Let's go",
+                    title: null,
+                    profileImg: null,
+                    uuid: "e597eb1f-98dc-4673-a906-50cdf944d777"
+                },
+                {
+                    name: "플레이스엑스(PLACE X)",
+                    title: null,
+                    profileImg: null,
+                    uuid: "eee697f3-457d-4846-905d-4a6fb2a84e27"
+                }, 
         ]
     });
     const [selectedSector, setSelectedSector] = useState('A');
@@ -195,17 +197,20 @@ const Main = () => {
     };
 
     const handleTableClick = (table) => {
-        setSelectedTable(table);
+        setSelectedTable(table.name);
         const savedInfo = localStorage.getItem('name');
-        if(savedInfo === table){
+        if(savedInfo === table.name){
             console.log(savedInfo)
             console.log(table);
             setIsAuthenticated(true);
+            localStorage.setItem('Suuid',table.uuid)
+            console.log("localStorage");
             openWriteModal();
             
         }
         else{
-            
+            localStorage.setItem('Suuid',table.uuid)
+            console.log("localStorage");
             openViewModal();
         }
         
@@ -285,7 +290,7 @@ const Main = () => {
                 {tablesData[selectedSector].map((table, index) => (
                     <div key={index} className="table-item"  onClick={() => handleTableClick(table)}>
                         
-                        <img src='http://localhost:3000/image?url=https://github.com/KwonSunJae/CLOUD_AI_WEB_BATMAN_BATNAM_2021/raw/master/logo.png' ></img>
+                        <img src={'http://117.16.137.217:5000/image?url='+table.profileImg} ></img>
                         <h1>{table.name}</h1>
 
                     </div>
@@ -332,7 +337,7 @@ const Main = () => {
                 <div>
                     <h3>{selectedTable} 감상하기</h3>
                     {/* 테이블 조회 API를 통해 데이터를 가져와서 보여줌 */}
-                    <View url= 'http://localhost:3000/image?url=https://raw.githubusercontent.com/KwonSunJae/CLOUD_AI_WEB_BATMAN_BATNAM_2021/master/readme.md'/>
+                    <View />
                 </div>
             </Modal>
         </div>

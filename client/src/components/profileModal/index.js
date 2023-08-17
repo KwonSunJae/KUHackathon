@@ -10,18 +10,24 @@ const Profile = () => {
 
   useEffect(()=>{
     const userUuid = localStorage.getItem('uuid');
-    const data = getTeam(userUuid);
-    setProfileImg(data.profileImg);
+    getTeam(userUuid).then(data=>{
+      
+      setProfileImg(data.profileImg);
     setReadmeURL(data.readmeURL);
     setTitle(data.title);
     setDescription(data.description);
+    });
+    
   },[]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const userUuid = localStorage.getItem('uuid');
     // 여기서 데이터를 서버로 보내는 작업을 수행할 수 있습니다.
-    const data = updateTeam({profileImg: profileImg, readmeURL : readmeURL, title : title, description: description});
-    console.log('Submitted Data:', data);
+    updateTeam({profileImg: profileImg, readmeURL : readmeURL, title : title, description: description, uuid : userUuid}).then(data=>{
+      console.log(data);
+    })
+    
   };
 
   return (
