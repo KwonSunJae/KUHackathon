@@ -22,7 +22,7 @@ const process = {
             db.reaple
                 .create({
                     name: name,
-                    teamUuid: teamUuid,
+                    team_uuid: teamUuid,
                     contents, contents,
                 },).then((data) => {
                     console.log(data);

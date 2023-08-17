@@ -34,10 +34,16 @@ const teams = {
 
         db.team.findOne({ //likeUuidList , reapleList
             attributes: ["name", "profileImg", "readmeURL", "title", "description", "heart"],
+            where:{
+                uuid: teamUuid
+            }
         })
             .then((data) => {
                 db.reaple.findAll({
-                    attributes: ["name", "contents"]
+                    attributes: ["name", "contents"],
+                    where:{
+                        team_uuid: teamUuid
+                    }
                 }).then((datas) => {
                     res.send({
                         name: data.name,
@@ -72,6 +78,10 @@ const teams = {
             where : {
             uuid : teamUuid
         }}).then((data)=>{
+            if(data.heart==null){
+                res.send({isAvailable:true});
+                return;
+            }
             const team_list = JSON.parse(data.heart);
             if(team_list.length >=10){
                 res.send({isAvailable : false});
@@ -101,8 +111,13 @@ const process = {
             },
         })
             .then((data) => {
-                console.log(data);
-                const team_list = JSON.parse(data.heart);
+                console.log(data.heart);
+                var team_list = [];
+                if(data.heart != null){
+                    
+                    team_list= JSON.parse(data.heart);
+                }
+                
                 team_list.forEach(team => {
                     like_team_list.push(team);
                 });
